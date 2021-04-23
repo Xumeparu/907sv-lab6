@@ -1,6 +1,8 @@
 import { applyMiddleware, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import rootReducer from './reducers';
+import { routerMiddleware } from 'connected-react-router';
+import { createHashHistory } from 'history';
+import createRootReducer from './reducers';
 import { TodoSlice, REQUEST_STATE_TYPES } from './reducers/todoSlice';
 import { FilterSlice, SELECT_FILTER_TYPES } from './reducers/filterSlice';
 
@@ -25,7 +27,9 @@ export const initialState: Store = {
   filter: filterInitialState
 };
 
-export { rootReducer };
-const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+export const history = createHashHistory();
+
+export const rootReducer = createRootReducer(history);
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, routerMiddleware(history)));
 export type AppDispatch = typeof store.dispatch;
 export default store;

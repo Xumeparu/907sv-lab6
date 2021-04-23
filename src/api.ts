@@ -55,6 +55,23 @@ const api = {
           title
         })
       }).then(handleAlert)
+  },
+  auth: {
+    check: () => fetch(`${URL}/auth`).then(handleAlert),
+    login: (username: string, password: string) =>
+      fetch(`${URL}/auth`, {
+        method: 'POST',
+        headers: defaultHeaders,
+        body: JSON.stringify({
+          username,
+          password
+        })
+      }).then(handleAlert),
+    logout: (id: string) =>
+      fetch(`${URL}/auth`, {
+        method: 'DELETE',
+        headers: defaultHeaders
+      }).then(handleAlert)
   }
 };
 

@@ -1,27 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Switch, Route } from 'react-router';
+import { useDispatch } from 'react-redux';
 import './App.css';
-import Alert from '../components/Alert/Alert';
-import Filter from '../components/Filter/Filter';
-import Form from '../components/Form/Form';
-import ItemsCounter from '../components/ItemsCounter/ItemsCounter';
-import List from '../components/List/List';
+import TodoView from '../views/TodoView';
+import LoginView from '../views/LoginView';
+import { initialAuthCheck } from '../store/actions';
 
 export default function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initialAuthCheck());
+  }, []);
+
   return (
     <div className="wrapper">
       <div>
         <h1>Список дел</h1>
-        <h2>Лабораторная №3. Фильтруемый список в React</h2>
       </div>
-      <Alert />
-      <Form />
-      <div>
-        <Filter />
-      </div>
-      <div>
-        <ItemsCounter />
-      </div>
-      <List />
+      <Switch>
+        <Route path="/login" component={LoginView} />
+        <Route path="/todo" component={TodoView} />
+      </Switch>
     </div>
   );
 }

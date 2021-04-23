@@ -1,3 +1,4 @@
+import { push } from 'connected-react-router';
 import api from '../api';
 import { AppDispatch } from './index';
 import { IItem, REQUEST_STATE_TYPES } from './reducers/todoSlice';
@@ -152,5 +153,23 @@ export const editItem = (id: string, title: string) => async (dispatch: AppDispa
   } catch (error) {
     dispatch(setError(error.message));
     dispatch(setRequestState(REQUEST_STATE_TYPES.ERROR));
+  }
+};
+
+export const initialAuthCheck = () => async (dispatch: AppDispatch) => {
+  try {
+    await api.auth.check();
+    dispatch(push('/todo'));
+  } catch (error) {
+    dispatch(push('/login'));
+  }
+};
+
+export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
+  try {
+    await api.auth.login(username, password);
+    dispatch(push('/todo'));
+  } catch (error) {
+    console.log(error);
   }
 };
