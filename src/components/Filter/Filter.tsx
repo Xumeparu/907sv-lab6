@@ -23,7 +23,7 @@ export default function Filter() {
   }
 
   return (
-    <>
+    <div>
       <select className="filter" data-testid="selector" onChange={filterHandler}>
         {Object.keys(SELECT_FILTER_TYPES).map((item, index) => (
           <option
@@ -41,6 +41,6 @@ export default function Filter() {
         value={substring}
         onChange={searchStringHandler}
       />
-    </>
+    </div>
   );
 }

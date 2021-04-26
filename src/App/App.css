@@ -25,11 +25,15 @@ button {
     outline-style: none;
 }
 
-.addBtn {
+.addBtn, .loginBtn {
     height: 30px;
     width: 150px;
 
     margin-top: 1%;
+}
+
+.loginBtn {
+    margin-left: 1%;
 }
 
 .deleteBtn, .editBtn, .saveBtn {
@@ -39,18 +43,10 @@ button {
     margin: 1%;
 }
 
-.fetchBtn {
-    height: 30px;
-    width: 150px;
-
-    background-color: #ec4949;
-
-    margin-right: 1%;
-}
-
 .addBtn:hover, .addBtn:active,
 .deleteBtn:hover, .deleteBtn:active,
-.fetchBtn:hover, .fetchBtn:active {
+.fetchBtn:hover, .fetchBtn:active,
+.loginBtn:hover, .loginBtn:active {
     color: #d6d6d6;
 }
 
