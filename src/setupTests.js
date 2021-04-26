@@ -32,3 +32,21 @@ export function makeTestStore({ initialState = originalInitialState, useMockStor
   store.dispatch = jest.fn(origDispatch);
   return store;
 }
+
+export const list = [
+  {
+    id: '1',
+    title: 'Полить кота',
+    isChecked: false
+  },
+  {
+    id: '2',
+    title: 'Покормить цветы',
+    isChecked: true
+  },
+  {
+    id: '3',
+    title: 'Написать тесты',
+    isChecked: true
+  }
+];

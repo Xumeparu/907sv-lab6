@@ -3,25 +3,7 @@ import React from 'react';
 import List, { DecoupledList } from './List';
 import { REQUEST_STATE_TYPES } from '../../store/reducers/todoSlice';
 import { ACTION_TYPES } from '../../store/actions';
-import { makeTestStore, testRender } from '../../setupTests';
-
-const list = [
-  {
-    id: '1',
-    title: 'Полить кота',
-    isChecked: false
-  },
-  {
-    id: '2',
-    title: 'Покормить цветы',
-    isChecked: true
-  },
-  {
-    id: '3',
-    title: 'Написать тесты',
-    isChecked: true
-  }
-];
+import { makeTestStore, testRender, list } from '../../setupTests';
 
 test('Корректное отображение пустого списка', () => {
   const list = [];

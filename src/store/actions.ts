@@ -13,7 +13,8 @@ export const ACTION_TYPES = {
   SELECT_BY_FILTER: 'selectByFilter',
   SELECT_BY_SEARCH_STRING: 'selectBySearchString',
   SET_REQUEST_STATE: 'setRequestState',
-  SET_ERROR: 'setError'
+  SET_ERROR: 'setError',
+  INITIAL_AUTH_CHECK: 'initialAuthCheck'
 } as const;
 
 export type ACTION_TYPE =
@@ -25,7 +26,8 @@ export type ACTION_TYPE =
   | typeof ACTION_TYPES.SELECT_BY_FILTER
   | typeof ACTION_TYPES.SELECT_BY_SEARCH_STRING
   | typeof ACTION_TYPES.SET_REQUEST_STATE
-  | typeof ACTION_TYPES.SET_ERROR;
+  | typeof ACTION_TYPES.SET_ERROR
+  | typeof ACTION_TYPES.INITIAL_AUTH_CHECK;
 
 export type IAction =
   | IActionAdd
@@ -36,7 +38,8 @@ export type IAction =
   | IActionSelectByFilter
   | IActionSelectBySearchString
   | IActionSetRequestState
-  | IActionSetError;
+  | IActionSetError
+  | IActionInitialAuthCheck;
 
 export interface IActionAdd {
   type: typeof ACTION_TYPES.ADD;
@@ -86,12 +89,16 @@ export interface IActionSetError {
   payload: string;
 }
 
-const setRequestState = (requestState: REQUEST_STATE_TYPES) => ({
+export interface IActionInitialAuthCheck {
+  type: typeof ACTION_TYPES.INITIAL_AUTH_CHECK;
+}
+
+export const setRequestState = (requestState: REQUEST_STATE_TYPES) => ({
   type: ACTION_TYPES.SET_REQUEST_STATE,
   payload: requestState
 });
 
-const setError = (error: string) => ({
+export const setError = (error: string) => ({
   type: ACTION_TYPES.SET_ERROR,
   payload: error
 });
@@ -101,18 +108,6 @@ export const addItem = (title: string) => async (dispatch: AppDispatch) => {
     dispatch(setRequestState(REQUEST_STATE_TYPES.LOADING));
     const data = await api.todo.add({ title });
     dispatch({ type: ACTION_TYPES.ADD, payload: data });
-    dispatch(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
-  } catch (error) {
-    dispatch(setError(error.message));
-    dispatch(setRequestState(REQUEST_STATE_TYPES.ERROR));
-  }
-};
-
-export const getItems = () => async (dispatch: AppDispatch) => {
-  try {
-    dispatch(setRequestState(REQUEST_STATE_TYPES.LOADING));
-    const data = await api.todo.list();
-    dispatch({ type: ACTION_TYPES.ADD_ALL, payload: data });
     dispatch(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
   } catch (error) {
     dispatch(setError(error.message));
@@ -156,14 +151,9 @@ export const editItem = (id: string, title: string) => async (dispatch: AppDispa
   }
 };
 
-export const initialAuthCheck = () => async (dispatch: AppDispatch) => {
-  try {
-    await api.auth.check();
-    dispatch(push('/todo'));
-  } catch (error) {
-    dispatch(push('/login'));
-  }
-};
+export const initialAuthCheck = () => ({
+  type: ACTION_TYPES.INITIAL_AUTH_CHECK
+});
 
 export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
   try {

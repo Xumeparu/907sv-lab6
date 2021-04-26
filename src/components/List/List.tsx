@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import ListItem from '../ListItem/ListItem';
 import { IItem } from '../../store/reducers/todoSlice';
-import { getItems } from '../../store/actions';
 import { selectFilteredList } from '../../store/selectors';
 
 type DecoupledListProps = {
@@ -26,13 +25,7 @@ export function DecoupledList({ list }: DecoupledListProps) {
 }
 
 export default function List() {
-  const dispatch = useDispatch();
   const list = useSelector(selectFilteredList);
-
-  useEffect(() => {
-    dispatch(getItems());
-  }, []);
-
   return (
     <>
       <DecoupledList list={list} />

@@ -2,35 +2,18 @@ import fetchMock from 'fetch-mock';
 import { initialState, rootReducer } from './index';
 import { REQUEST_STATE_TYPES } from './reducers/todoSlice';
 import { SELECT_FILTER_TYPES } from './reducers/filterSlice';
-import { ACTION_TYPES, getItems, addItem, removeItem } from './actions';
+import { ACTION_TYPES, addItem, removeItem } from './actions';
 import {
   selectByFilter,
   selectBySearchString,
   selectFilteredList,
   selectItemsCount
 } from './selectors';
-import { makeTestStore } from '../setupTests';
+import { makeTestStore, list } from '../setupTests';
 
 const title = 'Покормить цветы';
 const substring = 'Кот';
 const state = initialState;
-const list = [
-  {
-    id: '1',
-    title: 'Полить кота',
-    isChecked: false
-  },
-  {
-    id: '2',
-    title: 'Покормить цветы',
-    isChecked: true
-  },
-  {
-    id: '3',
-    title: 'Написать тесты',
-    isChecked: true
-  }
-];
 
 describe('Проверка функционирования store.js', () => {
   test('Проверка добавления элемента (ACTION_TYPES.ADD)', () => {
@@ -236,52 +219,6 @@ describe('Тестирование асинхронных экшенов store.j
 
     const store = makeTestStore({ useMockStore: true });
     await store.dispatch(addItem(list[1].title));
-    expect(store.getActions()).toEqual([
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
-      { type: ACTION_TYPES.SET_ERROR, payload: errorObject.error },
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.ERROR }
-    ]);
-  });
-
-  test('getItems', async () => {
-    fetchMock.mock(
-      'express:/todos',
-      {
-        status: 200,
-        body: list
-      },
-      {
-        method: 'GET'
-      }
-    );
-
-    const store = makeTestStore({ useMockStore: true });
-    await store.dispatch(getItems());
-    expect(store.getActions()).toEqual([
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
-      { type: ACTION_TYPES.ADD_ALL, payload: list },
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.SUCCESS }
-    ]);
-  });
-
-  test('getItems с ошибкой', async () => {
-    const errorObject = {
-      error: 'Error message'
-    };
-
-    fetchMock.mock(
-      'express:/todos',
-      {
-        status: 500,
-        body: errorObject
-      },
-      {
-        method: 'GET'
-      }
-    );
-
-    const store = makeTestStore({ useMockStore: true });
-    await store.dispatch(getItems());
     expect(store.getActions()).toEqual([
       { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
       { type: ACTION_TYPES.SET_ERROR, payload: errorObject.error },
