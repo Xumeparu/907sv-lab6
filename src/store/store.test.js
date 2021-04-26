@@ -1,5 +1,5 @@
 import fetchMock from 'fetch-mock';
-import { initialState, createRootReducer } from './index';
+import { initialState, rootReducer } from './index';
 import { REQUEST_STATE_TYPES } from './reducers/todoSlice';
 import { SELECT_FILTER_TYPES } from './reducers/filterSlice';
 import { ACTION_TYPES, getItems, addItem, removeItem } from './actions';
@@ -39,7 +39,7 @@ describe('Проверка функционирования store.js', () => {
       payload: list[1]
     };
 
-    const newState = createRootReducer(state, action);
+    const newState = rootReducer(state, action);
 
     expect(newState.todo.list.length).toEqual(1);
     expect(newState.todo.list[0]).toHaveProperty('id');
@@ -52,7 +52,7 @@ describe('Проверка функционирования store.js', () => {
       payload: list
     };
 
-    const state = createRootReducer(initialState, addAllAction);
+    const state = rootReducer(initialState, addAllAction);
     expect(state.todo.list.length).toEqual(list.length);
   });
 
@@ -62,14 +62,14 @@ describe('Проверка функционирования store.js', () => {
       payload: title
     };
 
-    let state = createRootReducer(initialState, addAction);
+    let state = rootReducer(initialState, addAction);
 
     const removeAction = {
       type: ACTION_TYPES.REMOVE,
       payload: state.todo.list[0].id
     };
 
-    state = createRootReducer(state, removeAction);
+    state = rootReducer(state, removeAction);
     expect(state.todo.list.length).toEqual(0);
   });
 
@@ -79,15 +79,15 @@ describe('Проверка функционирования store.js', () => {
       payload: title
     };
 
-    let state = createRootReducer(initialState, addAction);
-    state = createRootReducer(state, addAction);
+    let state = rootReducer(initialState, addAction);
+    state = rootReducer(state, addAction);
 
     const checkedAction = {
       type: ACTION_TYPES.CHECKED,
       payload: state.todo.list[0].id
     };
 
-    state = createRootReducer(state, checkedAction);
+    state = rootReducer(state, checkedAction);
     expect(state.todo.list[0].isChecked).toBeTruthy();
   });
 
@@ -99,15 +99,15 @@ describe('Проверка функционирования store.js', () => {
       payload: title
     };
 
-    let state = createRootReducer(initialState, addAction);
-    state = createRootReducer(state, addAction);
+    let state = rootReducer(initialState, addAction);
+    state = rootReducer(state, addAction);
 
     const editAction = {
       type: ACTION_TYPES.EDIT,
       payload: { id: state.todo.list[0].id, title: newTitle }
     };
 
-    state = createRootReducer(state, editAction);
+    state = rootReducer(state, editAction);
     expect(state.todo.list[0].title).toEqual(newTitle);
   });
 
@@ -117,14 +117,14 @@ describe('Проверка функционирования store.js', () => {
       payload: title
     };
 
-    let state = createRootReducer(initialState, addAction);
+    let state = rootReducer(initialState, addAction);
 
     const selectFilterAction = {
       type: ACTION_TYPES.SELECT_BY_FILTER,
       payload: SELECT_FILTER_TYPES.DONE
     };
 
-    state = createRootReducer(state, selectFilterAction);
+    state = rootReducer(state, selectFilterAction);
     expect(state.todo.list.length).toEqual(1);
     expect(state.filter.itemState).toEqual(SELECT_FILTER_TYPES.DONE);
   });
@@ -135,14 +135,14 @@ describe('Проверка функционирования store.js', () => {
       payload: list[0]
     };
 
-    let state = createRootReducer(initialState, addAction);
+    let state = rootReducer(initialState, addAction);
 
     const selectBySearchStringAction = {
       type: ACTION_TYPES.SELECT_BY_SEARCH_STRING,
       payload: substring
     };
 
-    state = createRootReducer(state, selectBySearchStringAction);
+    state = rootReducer(state, selectBySearchStringAction);
     expect(state.todo.list.length).toEqual(1);
     expect(state.todo.list[0].isChecked).toEqual(list[0].isChecked);
     expect(state.filter.substring).toEqual(substring);
@@ -184,7 +184,7 @@ describe('Проверка функционирования store.js', () => {
     const defaultAction = {
       type: null
     };
-    let state = createRootReducer(initialState, defaultAction);
+    let state = rootReducer(initialState, defaultAction);
     expect(state.todo.list.length).toEqual(0);
   });
 
