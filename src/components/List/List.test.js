@@ -1,6 +1,6 @@
 import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
-import List, { DecoupledList } from './List';
+import { DecoupledList } from './List';
 import { REQUEST_STATE_TYPES } from '../../store/reducers/todoSlice';
 import { ACTION_TYPES } from '../../store/actions';
 import { makeTestStore, testRender, list } from '../../setupTests';
@@ -48,14 +48,4 @@ test('Вызов checkHandler с нужными параметрами при к
     fireEvent.click(checkboxes[i]);
     expect(store.dispatch).toBeCalledWith({ type: ACTION_TYPES.CHECKED, payload: list[i].id });
   }
-});
-
-test('<List> вызывает асинхронный экшен getItems', () => {
-  const store = makeTestStore({ useMockStore: true });
-  testRender(<List />, { store });
-
-  expect(store.getActions()[0]).toEqual({
-    type: ACTION_TYPES.SET_REQUEST_STATE,
-    payload: REQUEST_STATE_TYPES.LOADING
-  });
 });

@@ -8,7 +8,7 @@ export default function Alert() {
   const error = useSelector((state: Store) => state.todo.error);
 
   return (
-    <div>
+    <>
       {requestState === REQUEST_STATE_TYPES.LOADING && (
         <>
           <div>Загрузка...</div>
@@ -20,6 +20,6 @@ export default function Alert() {
           <div className="errorMessage">{error}</div>
         </>
       )}
-    </div>
+    </>
   );
 }

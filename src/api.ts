@@ -63,10 +63,9 @@ const api = {
           password
         })
       }).then(handleAlert),
-    logout: (id: string) =>
+    logout: () =>
       fetch(`${URL}/auth`, {
         method: 'DELETE',
-        headers: defaultHeaders
       }).then(handleAlert)
   }
 };

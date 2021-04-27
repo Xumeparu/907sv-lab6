@@ -5,6 +5,7 @@ import './App.css';
 import TodoView from '../views/TodoView';
 import LoginView from '../views/LoginView';
 import { initialAuthCheck } from '../store/actions';
+import Alert from "../components/Alert/Alert";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ export default function App() {
     <div className="wrapper">
       <div>
         <h1>Список дел</h1>
+          <Alert />
       </div>
       <Switch>
         <Route path="/login" component={LoginView} />

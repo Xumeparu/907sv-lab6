@@ -8,7 +8,6 @@ import List from '../components/List/List';
 export default function TodoView() {
   return (
     <>
-      <Alert />
       <Form />
       <Filter />
       <ItemsCounter />
