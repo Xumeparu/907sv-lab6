@@ -27,8 +27,7 @@ const api = {
           title
         })
       }).then(handleAlert),
-    list: () =>
-      fetch(`${URL}/todos?${randomNumber()}`).then(handleAlert),
+    list: () => fetch(`${URL}/todos?${randomNumber()}`).then(handleAlert),
     remove: ({ id }: { id: string }) =>
       fetch(`${URL}/todos/${id}`, {
         method: 'DELETE'
@@ -65,7 +64,7 @@ const api = {
       }).then(handleAlert),
     logout: () =>
       fetch(`${URL}/auth`, {
-        method: 'DELETE',
+        method: 'DELETE'
       }).then(handleAlert)
   }
 };

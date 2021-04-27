@@ -25,14 +25,14 @@ button {
     outline-style: none;
 }
 
-.addBtn, .loginBtn {
+.addBtn, .loginBtn, .logoutBtn {
     height: 30px;
     width: 150px;
 
     margin-top: 1%;
 }
 
-.loginBtn {
+.loginBtn, .logoutBtn {
     margin-left: 1%;
 }
 
@@ -46,7 +46,8 @@ button {
 .addBtn:hover, .addBtn:active,
 .deleteBtn:hover, .deleteBtn:active,
 .fetchBtn:hover, .fetchBtn:active,
-.loginBtn:hover, .loginBtn:active {
+.loginBtn:hover, .loginBtn:active,
+.logoutBtn:hover, .logoutBtn:active {
     color: #d6d6d6;
 }
 

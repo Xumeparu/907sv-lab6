@@ -157,9 +157,24 @@ export const initialAuthCheck = () => ({
 
 export const login = (username: string, password: string) => async (dispatch: AppDispatch) => {
   try {
+    dispatch(setRequestState(REQUEST_STATE_TYPES.LOADING));
     await api.auth.login(username, password);
     dispatch(push('/todo'));
+    dispatch(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
   } catch (error) {
-    console.log(error);
+    dispatch(setError(error.message));
+    dispatch(setRequestState(REQUEST_STATE_TYPES.ERROR));
+  }
+};
+
+export const logout = () => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(setRequestState(REQUEST_STATE_TYPES.LOADING));
+    await api.auth.logout();
+    dispatch(push('/login'));
+    dispatch(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
+  } catch (error) {
+    dispatch(setError(error.message));
+    dispatch(setRequestState(REQUEST_STATE_TYPES.ERROR));
   }
 };
