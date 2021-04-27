@@ -28,14 +28,10 @@ const api = {
         })
       }).then(handleAlert),
     list: () =>
-      fetch(`${URL}/todos?${randomNumber()}`, {
-        method: 'GET',
-        headers: defaultHeaders
-      }).then(handleAlert),
+      fetch(`${URL}/todos?${randomNumber()}`).then(handleAlert),
     remove: ({ id }: { id: string }) =>
       fetch(`${URL}/todos/${id}`, {
-        method: 'DELETE',
-        headers: defaultHeaders
+        method: 'DELETE'
       }).then(handleAlert),
     checked: ({ id, isChecked }: { id: string; isChecked: boolean }) =>
       fetch(`${URL}/todos/${id}`, {

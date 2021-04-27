@@ -18,10 +18,9 @@ export function* initialAuthCheckSaga() {
   }
 }
 
-export function* getItemsSaga() {
+export function* getItemsSaga(): Generator {
   try {
     yield put(setRequestState(REQUEST_STATE_TYPES.LOADING));
-    // @ts-ignore
     const data = yield call(api.todo.list);
     yield put({ type: ACTION_TYPES.ADD_ALL, payload: data });
     yield put(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
