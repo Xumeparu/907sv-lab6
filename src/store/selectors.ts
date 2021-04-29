@@ -1,10 +1,10 @@
 import { Store } from './index';
 import { IItem } from './reducers/todoSlice';
-import { SELECT_FILTER_TYPE, SELECT_FILTER_TYPES } from './reducers/filterSlice';
+import { SELECT_ITEM_STATE_TYPE, SELECT_ITEM_STATE } from './reducers/filterSlice';
 
-export function selectByFilter(list: IItem[], filter: SELECT_FILTER_TYPE) {
-  if (filter === SELECT_FILTER_TYPES.DONE) return list.filter(item => item.isChecked);
-  if (filter === SELECT_FILTER_TYPES.NOT_DONE) return list.filter(item => !item.isChecked);
+export function selectByFilter(list: IItem[], filter: SELECT_ITEM_STATE_TYPE) {
+  if (filter === SELECT_ITEM_STATE.DONE) return list.filter(item => item.isChecked);
+  if (filter === SELECT_ITEM_STATE.NOT_DONE) return list.filter(item => !item.isChecked);
   return list;
 }
 

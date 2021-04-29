@@ -1,7 +1,7 @@
 import fetchMock from 'fetch-mock';
 import { initialState, rootReducer } from './index';
 import { REQUEST_STATE_TYPES } from './reducers/todoSlice';
-import { SELECT_FILTER_TYPES } from './reducers/filterSlice';
+import { SELECT_ITEM_STATE } from './reducers/filterSlice';
 import { ACTION_TYPES, addItem, removeItem } from './actions';
 import {
   selectByFilter,
@@ -104,12 +104,12 @@ describe('Проверка функционирования store.js', () => {
 
     const selectFilterAction = {
       type: ACTION_TYPES.SELECT_BY_FILTER,
-      payload: SELECT_FILTER_TYPES.DONE
+      payload: SELECT_ITEM_STATE.DONE
     };
 
     state = rootReducer(state, selectFilterAction);
     expect(state.todo.list.length).toEqual(1);
-    expect(state.filter.itemState).toEqual(SELECT_FILTER_TYPES.DONE);
+    expect(state.filter.itemState).toEqual(SELECT_ITEM_STATE.DONE);
   });
 
   test('Проверка поиска элемента по подстроке (ACTION_TYPES.SELECT_BY_SEARCH_STRING)', () => {
@@ -132,11 +132,11 @@ describe('Проверка функционирования store.js', () => {
   });
 
   test('Проверка фильтрации списка selectByFilter', () => {
-    let filteredList = selectByFilter(list, SELECT_FILTER_TYPES.NOT_DONE);
+    let filteredList = selectByFilter(list, SELECT_ITEM_STATE.NOT_DONE);
     expect(filteredList.length).toEqual(1);
     expect(filteredList[0].id).toEqual(list[0].id);
 
-    filteredList = selectByFilter(list, SELECT_FILTER_TYPES.ALL);
+    filteredList = selectByFilter(list, SELECT_ITEM_STATE.ALL);
     expect(filteredList.length).toEqual(3);
   });
 
@@ -154,7 +154,7 @@ describe('Проверка функционирования store.js', () => {
       ...initialState,
       todo: { list },
       filter: {
-        filter: SELECT_FILTER_TYPES.DONE,
+        filter: SELECT_ITEM_STATE.DONE,
         substring: 'цве'
       }
     };

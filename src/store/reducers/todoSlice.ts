@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export enum REQUEST_STATE_TYPES {
   IDLE,
@@ -25,7 +25,7 @@ export const todoInitialState: TodoSlice = {
   error: ''
 };
 
-export default createSlice({
+const todoSlice = createSlice({
   name: 'todo',
   initialState: todoInitialState,
   reducers: {
@@ -46,7 +46,7 @@ export default createSlice({
         return item;
       });
     },
-    edit: (state, action: PayloadAction<{id: string, title: string}>) => {
+    edit: (state, action: PayloadAction<{ id: string; title: string }>) => {
       state.list = state.list.map(function (item) {
         if (item.id === action.payload.id) {
           return { ...item, title: action.payload.title };
@@ -59,6 +59,11 @@ export default createSlice({
     },
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
-    }
+    },
+    initialAuthCheck: () => { }
   }
 });
+
+export const { add, addAll, remove, checked, edit, setRequestState, setError, initialAuthCheck } = todoSlice.actions;
+
+export default todoSlice;

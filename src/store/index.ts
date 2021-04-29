@@ -4,7 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { createHashHistory } from 'history';
 import todoSlice, { TodoSlice, REQUEST_STATE_TYPES } from './reducers/todoSlice';
-import filterReducer, { FilterSlice, SELECT_FILTER_TYPES } from './reducers/filterSlice';
+import filterSlice, { FilterSlice, SELECT_ITEM_STATE } from './reducers/filterSlice';
 import rootSaga from './sagas/sagas';
 
 export type Store = {
@@ -19,7 +19,7 @@ export const todoInitialState: TodoSlice = {
 };
 
 export const filterInitialState: FilterSlice = {
-  itemState: SELECT_FILTER_TYPES.ALL,
+  itemState: SELECT_ITEM_STATE.ALL,
   substring: ''
 };
 
@@ -34,7 +34,7 @@ const sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
   reducer: {
     todo: todoSlice.reducer,
-    filter: filterReducer,
+    filter: filterSlice.reducer,
     router: connectRouter(history)
   },
   middleware: [thunkMiddleware, routerMiddleware(history), sagaMiddleware]

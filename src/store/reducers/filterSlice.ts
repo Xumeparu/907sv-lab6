@@ -1,35 +1,39 @@
-import { ACTION_TYPES, IAction } from '../actions';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export const SELECT_FILTER_TYPES = {
+export const SELECT_ITEM_STATE = {
   ALL: 'Все',
   DONE: 'Выполненные',
   NOT_DONE: 'Не выполненные'
 } as const;
 
-export type SELECT_FILTER_TYPE =
-  | typeof SELECT_FILTER_TYPES.ALL
-  | typeof SELECT_FILTER_TYPES.DONE
-  | typeof SELECT_FILTER_TYPES.NOT_DONE;
+export type SELECT_ITEM_STATE_TYPE =
+  | typeof SELECT_ITEM_STATE.ALL
+  | typeof SELECT_ITEM_STATE.DONE
+  | typeof SELECT_ITEM_STATE.NOT_DONE;
 
 export type FilterSlice = {
-  itemState: SELECT_FILTER_TYPE;
+  itemState: SELECT_ITEM_STATE_TYPE;
   substring: string;
 };
 
 export const filterInitialState: FilterSlice = {
-  itemState: SELECT_FILTER_TYPES.ALL,
+  itemState: SELECT_ITEM_STATE.ALL,
   substring: ''
 };
 
-export default function filterReducer(state = filterInitialState, action: IAction): FilterSlice {
-  switch (action.type) {
-    case ACTION_TYPES.SELECT_BY_FILTER: {
-      return { ...state, itemState: action.payload };
+const filterSlice = createSlice({
+  name: 'filter',
+  initialState: filterInitialState,
+  reducers: {
+    setItemState: (state, action: PayloadAction<SELECT_ITEM_STATE_TYPE>) => {
+      state.itemState = action.payload;
+    },
+    setSubstring: (state, action: PayloadAction<string>) => {
+      state.substring = action.payload;
     }
-    case ACTION_TYPES.SELECT_BY_SEARCH_STRING: {
-      return { ...state, substring: action.payload };
-    }
-    default:
-      return state;
   }
-}
+});
+
+export const { setItemState, setSubstring } = filterSlice.actions;
+
+export default filterSlice;

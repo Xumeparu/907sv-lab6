@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 import './App.css';
 import TodoView from '../views/TodoView';
 import LoginView from '../views/LoginView';
-import { initialAuthCheck } from '../store/actions';
 import Alert from '../components/Alert/Alert';
+import { initialAuthCheck } from '../store/reducers/todoSlice';
 
 export default function App() {
   const dispatch = useDispatch();

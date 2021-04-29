@@ -1,37 +1,30 @@
 import React, { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Store } from '../../store';
-import { SELECT_FILTER_TYPE, SELECT_FILTER_TYPES } from '../../store/reducers/filterSlice';
-import { ACTION_TYPES } from '../../store/actions';
+import {SELECT_ITEM_STATE_TYPE, SELECT_ITEM_STATE, setItemState, setSubstring} from '../../store/reducers/filterSlice';
 
 export default function Filter() {
   const dispatch = useDispatch();
   const substring = useSelector((state: Store) => state.filter.substring);
 
   function filterHandler(e: ChangeEvent<HTMLSelectElement>) {
-    dispatch({
-      type: ACTION_TYPES.SELECT_BY_FILTER,
-      payload: e.target.value as SELECT_FILTER_TYPE
-    });
+    dispatch(setItemState(e.target.value as SELECT_ITEM_STATE_TYPE));
   }
 
   function searchStringHandler(e: ChangeEvent<HTMLInputElement>) {
-    dispatch({
-      type: ACTION_TYPES.SELECT_BY_SEARCH_STRING,
-      payload: e.target.value
-    });
+    dispatch(setSubstring(e.target.value));
   }
 
   return (
     <div>
       <select className="filter" data-testid="selector" onChange={filterHandler}>
-        {Object.keys(SELECT_FILTER_TYPES).map((item, index) => (
+        {Object.keys(SELECT_ITEM_STATE).map((item, index) => (
           <option
             data-testid="option"
             key={index}
-            value={Object.values(SELECT_FILTER_TYPES)[index]}
+            value={Object.values(SELECT_ITEM_STATE)[index]}
           >
-            {Object.values(SELECT_FILTER_TYPES)[index]}
+            {Object.values(SELECT_ITEM_STATE)[index]}
           </option>
         ))}
       </select>
