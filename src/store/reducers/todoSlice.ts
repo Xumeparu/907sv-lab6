@@ -1,4 +1,4 @@
-import { ACTION_TYPES, IAction } from '../actions';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export enum REQUEST_STATE_TYPES {
   IDLE,
@@ -25,50 +25,40 @@ export const todoInitialState: TodoSlice = {
   error: ''
 };
 
-export default function todoReducer(state = todoInitialState, action: IAction): TodoSlice {
-  switch (action.type) {
-    case ACTION_TYPES.ADD: {
-      return { ...state, list: [...state.list, action.payload] };
+export default createSlice({
+  name: 'todo',
+  initialState: todoInitialState,
+  reducers: {
+    add: (state, action: PayloadAction<IItem>) => {
+      state.list.push(action.payload);
+    },
+    addAll: (state, action: PayloadAction<IItem[]>) => {
+      state.list = action.payload;
+    },
+    remove: (state, action: PayloadAction<string>) => {
+      state.list = state.list.filter(item => item.id !== action.payload);
+    },
+    checked: (state, action: PayloadAction<string>) => {
+      state.list = state.list.map(function (item) {
+        if (item.id === action.payload) {
+          return { ...item, isChecked: !item.isChecked };
+        }
+        return item;
+      });
+    },
+    edit: (state, action: PayloadAction<{id: string, title: string}>) => {
+      state.list = state.list.map(function (item) {
+        if (item.id === action.payload.id) {
+          return { ...item, title: action.payload.title };
+        }
+        return item;
+      });
+    },
+    setRequestState: (state, action: PayloadAction<REQUEST_STATE_TYPES>) => {
+      state.requestState = action.payload;
+    },
+    setError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
     }
-    case ACTION_TYPES.ADD_ALL: {
-      return { ...state, list: [...action.payload] };
-    }
-    case ACTION_TYPES.REMOVE: {
-      return { ...state, list: [...state.list.filter(item => item.id !== action.payload)] };
-    }
-    case ACTION_TYPES.CHECKED: {
-      return {
-        ...state,
-        list: [
-          ...state.list.map(function (item) {
-            if (item.id === action.payload) {
-              return { ...item, isChecked: !item.isChecked };
-            }
-            return item;
-          })
-        ]
-      };
-    }
-    case ACTION_TYPES.EDIT: {
-      return {
-        ...state,
-        list: [
-          ...state.list.map(function (item) {
-            if (item.id === action.payload.id) {
-              return { ...item, title: action.payload.title };
-            }
-            return item;
-          })
-        ]
-      };
-    }
-    case ACTION_TYPES.SET_REQUEST_STATE: {
-      return { ...state, requestState: action.payload };
-    }
-    case ACTION_TYPES.SET_ERROR: {
-      return { ...state, error: action.payload };
-    }
-    default:
-      return state;
   }
-}
+});

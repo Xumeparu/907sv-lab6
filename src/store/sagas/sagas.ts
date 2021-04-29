@@ -1,8 +1,8 @@
 import { push } from 'connected-react-router';
 import { takeEvery, call, put, fork } from 'redux-saga/effects';
 import api from '../../api';
-import { REQUEST_STATE_TYPES } from '../reducers/todoSlice';
-import { ACTION_TYPES, setError, setRequestState } from '../actions';
+import todoSlice, { REQUEST_STATE_TYPES } from '../reducers/todoSlice';
+import { ACTION_TYPES } from '../actions';
 
 export default function* rootSaga() {
   yield takeEvery(ACTION_TYPES.INITIAL_AUTH_CHECK, initialAuthCheckSaga);
@@ -20,12 +20,13 @@ export function* initialAuthCheckSaga() {
 
 export function* getItemsSaga(): Generator {
   try {
-    yield put(setRequestState(REQUEST_STATE_TYPES.LOADING));
+    yield put(todoSlice.actions.setRequestState(REQUEST_STATE_TYPES.LOADING));
     const data = yield call(api.todo.list);
-    yield put({ type: ACTION_TYPES.ADD_ALL, payload: data });
-    yield put(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
+    // @ts-ignore
+    yield put(todoSlice.actions.addAll(data));
+    yield put(todoSlice.actions.setRequestState(REQUEST_STATE_TYPES.SUCCESS));
   } catch (error) {
-    yield put(setError(error.message));
-    yield put(setRequestState(REQUEST_STATE_TYPES.ERROR));
+    yield put(todoSlice.actions.setError(error.message));
+    yield put(todoSlice.actions.setRequestState(REQUEST_STATE_TYPES.ERROR));
   }
 }
