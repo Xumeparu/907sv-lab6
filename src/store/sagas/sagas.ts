@@ -1,7 +1,13 @@
 import { push } from 'connected-react-router';
 import { takeEvery, call, put, fork } from 'redux-saga/effects';
 import api from '../../api';
-import { REQUEST_STATE_TYPES, addAll, setRequestState, setError, initialAuthCheck } from '../reducers/todoSlice';
+import {
+  IItem,
+  REQUEST_STATE_TYPES,
+  addAll,
+  setRequestState,
+  setError,
+  initialAuthCheck} from '../reducers/todoSlice';
 
 export default function* rootSaga() {
   yield takeEvery(initialAuthCheck.type, initialAuthCheckSaga);
@@ -21,8 +27,7 @@ export function* getItemsSaga(): Generator {
   try {
     yield put(setRequestState(REQUEST_STATE_TYPES.LOADING));
     const data = yield call(api.todo.list);
-    // @ts-ignore
-    yield put(addAll(data));
+    yield put(addAll(data as IItem[]));
     yield put(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
   } catch (error) {
     yield put(setError(error.message));
