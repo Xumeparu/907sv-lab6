@@ -1,8 +1,7 @@
 import { runSaga } from 'redux-saga';
 import { getItemsSaga } from './sagas';
 import fetchMock from 'fetch-mock';
-import { REQUEST_STATE_TYPES } from '../reducers/todoSlice';
-import { ACTION_TYPES } from '../actions';
+import { REQUEST_STATE_TYPES, addAll, setRequestState, setError } from '../reducers/todoSlice';
 import { list } from '../../setupTests';
 
 afterEach(() => fetchMock.reset());
@@ -33,9 +32,9 @@ test('getItemsSaga', async () => {
     getItemsSaga
   ).toPromise();
   expect(dispatched).toEqual([
-    { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
-    { type: ACTION_TYPES.ADD_ALL, payload: list },
-    { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.SUCCESS }
+    setRequestState(REQUEST_STATE_TYPES.LOADING),
+    addAll(list),
+    setRequestState(REQUEST_STATE_TYPES.SUCCESS)
   ]);
 });
 
@@ -61,8 +60,8 @@ test('getItemsSaga с ошибкой', async () => {
     getItemsSaga
   ).toPromise();
   expect(dispatched).toEqual([
-    { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
-    { type: ACTION_TYPES.SET_ERROR, payload: errorObject.error },
-    { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.ERROR }
+    setRequestState(REQUEST_STATE_TYPES.LOADING),
+    setError(errorObject.error),
+    setRequestState(REQUEST_STATE_TYPES.ERROR)
   ]);
 });

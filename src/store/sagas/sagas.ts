@@ -7,7 +7,8 @@ import {
   addAll,
   setRequestState,
   setError,
-  initialAuthCheck} from '../reducers/todoSlice';
+  initialAuthCheck
+} from '../reducers/todoSlice';
 
 export default function* rootSaga() {
   yield takeEvery(initialAuthCheck.type, initialAuthCheckSaga);

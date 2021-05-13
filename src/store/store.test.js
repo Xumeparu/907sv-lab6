@@ -1,8 +1,18 @@
 import fetchMock from 'fetch-mock';
-import { initialState, rootReducer } from './index';
-import { REQUEST_STATE_TYPES } from './reducers/todoSlice';
+import { filterInitialState, initialState, todoInitialState } from './index';
+import todoSlice, {
+  REQUEST_STATE_TYPES,
+  add,
+  addAll,
+  remove,
+  checked,
+  edit,
+  setRequestState,
+  setError
+} from './reducers/todoSlice';
+import filterSlice, { setItemState, setSubstring } from './reducers/filterSlice';
 import { SELECT_ITEM_STATE } from './reducers/filterSlice';
-import { ACTION_TYPES, addItem, removeItem } from './actions';
+import { addItem, removeItem } from './actions';
 import {
   selectByFilter,
   selectBySearchString,
@@ -16,119 +26,69 @@ const substring = 'Кот';
 const state = initialState;
 
 describe('Проверка функционирования store.js', () => {
-  test('Проверка добавления элемента (ACTION_TYPES.ADD)', () => {
-    const action = {
-      type: ACTION_TYPES.ADD,
-      payload: list[1]
-    };
+  test('Проверка добавления элемента (todoSlice.reducer.add)', () => {
+    const action = add(list[1]);
+    const newState = todoSlice.reducer(todoInitialState, action);
 
-    const newState = rootReducer(state, action);
-
-    expect(newState.todo.list.length).toEqual(1);
-    expect(newState.todo.list[0]).toHaveProperty('id');
-    expect(newState.todo.list[0].title).toEqual(title);
+    expect(newState.list.length).toEqual(1);
+    expect(newState.list[0]).toHaveProperty('id');
+    expect(newState.list[0].title).toEqual(title);
   });
 
-  test('Проверка добавления всех элементов (ACTION_TYPES.ADD_ALL)', () => {
-    const addAllAction = {
-      type: ACTION_TYPES.ADD_ALL,
-      payload: list
-    };
+  test('Проверка добавления всех элементов (todoSlice.reducer.addAll)', () => {
+    const addAllAction = addAll(list);
 
-    const state = rootReducer(initialState, addAllAction);
-    expect(state.todo.list.length).toEqual(list.length);
+    const state = todoSlice.reducer(todoInitialState, addAllAction);
+    expect(state.list.length).toEqual(list.length);
   });
 
-  test('Проверка удаления элемента (ACTION_TYPES.REMOVE)', () => {
-    const addAction = {
-      type: ACTION_TYPES.ADD,
-      payload: title
-    };
+  test('Проверка удаления элемента (todoSlice.reducer.remove)', () => {
+    const addAction = add(list[0]);
 
-    let state = rootReducer(initialState, addAction);
+    let state = todoSlice.reducer(todoInitialState, addAction);
 
-    const removeAction = {
-      type: ACTION_TYPES.REMOVE,
-      payload: state.todo.list[0].id
-    };
+    const removeAction = remove(list[0].id);
 
-    state = rootReducer(state, removeAction);
-    expect(state.todo.list.length).toEqual(0);
+    state = todoSlice.reducer(state, removeAction);
+    expect(state.list.length).toEqual(0);
   });
 
-  test('Проверка изменения параметра элемента (ACTION_TYPES.CHECKED)', () => {
-    const addAction = {
-      type: ACTION_TYPES.ADD,
-      payload: title
-    };
+  test('Проверка изменения параметра элемента (todoSlice.reducer.checked)', () => {
+    const addAction = add(list[0]);
 
-    let state = rootReducer(initialState, addAction);
-    state = rootReducer(state, addAction);
+    let state = todoSlice.reducer(todoInitialState, addAction);
+    state = todoSlice.reducer(state, addAction);
 
-    const checkedAction = {
-      type: ACTION_TYPES.CHECKED,
-      payload: state.todo.list[0].id
-    };
+    const checkedAction = checked(state.list[0].id);
 
-    state = rootReducer(state, checkedAction);
-    expect(state.todo.list[0].isChecked).toBeTruthy();
+    state = todoSlice.reducer(state, checkedAction);
+    expect(state.list[0].isChecked).toBeTruthy();
   });
 
-  test('Проверка изменения элемента (ACTION_TYPES.EDIT)', () => {
+  test('Проверка изменения элемента (todoSlice.reducer.edit)', () => {
     const newTitle = 'Полить цветы';
 
-    const addAction = {
-      type: ACTION_TYPES.ADD,
-      payload: title
-    };
+    const addAction = add(list[0]);
 
-    let state = rootReducer(initialState, addAction);
-    state = rootReducer(state, addAction);
+    let state = todoSlice.reducer(todoInitialState, addAction);
+    state = todoSlice.reducer(state, addAction);
 
-    const editAction = {
-      type: ACTION_TYPES.EDIT,
-      payload: { id: state.todo.list[0].id, title: newTitle }
-    };
+    const editAction = edit({ id: state.list[0].id, title: newTitle });
 
-    state = rootReducer(state, editAction);
-    expect(state.todo.list[0].title).toEqual(newTitle);
+    state = todoSlice.reducer(state, editAction);
+    expect(state.list[0].title).toEqual(newTitle);
   });
 
-  test('Проверка изменения фильтра элемента (ACTION_TYPES.SELECT_FILTER)', () => {
-    const addAction = {
-      type: ACTION_TYPES.ADD,
-      payload: title
-    };
-
-    let state = rootReducer(initialState, addAction);
-
-    const selectFilterAction = {
-      type: ACTION_TYPES.SELECT_BY_FILTER,
-      payload: SELECT_ITEM_STATE.DONE
-    };
-
-    state = rootReducer(state, selectFilterAction);
-    expect(state.todo.list.length).toEqual(1);
-    expect(state.filter.itemState).toEqual(SELECT_ITEM_STATE.DONE);
+  test('Проверка изменения фильтра элемента (setItemState)', () => {
+    const selectFilterAction = setItemState(SELECT_ITEM_STATE.DONE);
+    const state = filterSlice.reducer(filterInitialState, selectFilterAction);
+    expect(state.itemState).toEqual(SELECT_ITEM_STATE.DONE);
   });
 
-  test('Проверка поиска элемента по подстроке (ACTION_TYPES.SELECT_BY_SEARCH_STRING)', () => {
-    const addAction = {
-      type: ACTION_TYPES.ADD,
-      payload: list[0]
-    };
-
-    let state = rootReducer(initialState, addAction);
-
-    const selectBySearchStringAction = {
-      type: ACTION_TYPES.SELECT_BY_SEARCH_STRING,
-      payload: substring
-    };
-
-    state = rootReducer(state, selectBySearchStringAction);
-    expect(state.todo.list.length).toEqual(1);
-    expect(state.todo.list[0].isChecked).toEqual(list[0].isChecked);
-    expect(state.filter.substring).toEqual(substring);
+  test('Проверка поиска элемента по подстроке (setSubstring)', () => {
+    const selectBySearchStringAction = setSubstring(substring);
+    const state = filterSlice.reducer(filterInitialState, selectBySearchStringAction);
+    expect(state.substring).toEqual(substring);
   });
 
   test('Проверка фильтрации списка selectByFilter', () => {
@@ -163,14 +123,6 @@ describe('Проверка функционирования store.js', () => {
     expect(filteredList[0].title).toContain(list[1].title);
   });
 
-  test('Проверка default case', () => {
-    const defaultAction = {
-      type: null
-    };
-    let state = rootReducer(initialState, defaultAction);
-    expect(state.todo.list.length).toEqual(0);
-  });
-
   test('Проверка selectItemsCount', () => {
     const itemsCount = selectItemsCount(state);
     expect(itemsCount).toBe(state.todo.list.length);
@@ -192,12 +144,12 @@ describe('Тестирование асинхронных экшенов store.j
       }
     );
 
-    const store = makeTestStore({ useMockStore: true });
+    const store = makeTestStore();
     await store.dispatch(addItem(list[0].title));
     expect(store.getActions()).toEqual([
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
-      { type: ACTION_TYPES.ADD, payload: list[0] },
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.SUCCESS }
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      add(list[0]),
+      setRequestState(REQUEST_STATE_TYPES.SUCCESS)
     ]);
   });
 
@@ -217,12 +169,12 @@ describe('Тестирование асинхронных экшенов store.j
       }
     );
 
-    const store = makeTestStore({ useMockStore: true });
+    const store = makeTestStore();
     await store.dispatch(addItem(list[1].title));
     expect(store.getActions()).toEqual([
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
-      { type: ACTION_TYPES.SET_ERROR, payload: errorObject.error },
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.ERROR }
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      setError(errorObject.error),
+      setRequestState(REQUEST_STATE_TYPES.ERROR)
     ]);
   });
 
@@ -241,9 +193,9 @@ describe('Тестирование асинхронных экшенов store.j
     const store = makeTestStore({ initialState: list, useMockStore: true });
     await store.dispatch(removeItem(list[0].id));
     expect(store.getActions()).toEqual([
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
-      { type: ACTION_TYPES.REMOVE, payload: list[0].id },
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.SUCCESS }
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      remove(list[0].id),
+      setRequestState(REQUEST_STATE_TYPES.SUCCESS)
     ]);
   });
 
@@ -266,9 +218,9 @@ describe('Тестирование асинхронных экшенов store.j
     const store = makeTestStore({ initialState: list, useMockStore: true });
     await store.dispatch(removeItem(list[0].id));
     expect(store.getActions()).toEqual([
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.LOADING },
-      { type: ACTION_TYPES.SET_ERROR, payload: errorObject.error },
-      { type: ACTION_TYPES.SET_REQUEST_STATE, payload: REQUEST_STATE_TYPES.ERROR }
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      setError(errorObject.error),
+      setRequestState(REQUEST_STATE_TYPES.ERROR)
     ]);
   });
 });

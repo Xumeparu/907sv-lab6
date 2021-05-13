@@ -60,10 +60,19 @@ const todoSlice = createSlice({
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
-    initialAuthCheck: () => { }
+    initialAuthCheck: () => {}
   }
 });
 
-export const { add, addAll, remove, checked, edit, setRequestState, setError, initialAuthCheck } = todoSlice.actions;
+export const {
+  add,
+  addAll,
+  remove,
+  checked,
+  edit,
+  setRequestState,
+  setError,
+  initialAuthCheck
+} = todoSlice.actions;
 
 export default todoSlice;
