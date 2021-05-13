@@ -1,15 +1,14 @@
 import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import ListItem from './ListItem';
-import { REQUEST_STATE_TYPES } from '../../store/reducers/todoSlice';
-import { ACTION_TYPES } from '../../store/actions';
+import { REQUEST_STATE_TYPES, setRequestState } from '../../store/reducers/todoSlice';
 import { makeTestStore, testRender } from '../../setupTests';
 
 const id = '19';
 const title = 'Покормить цветы';
 
 test('Отображение элемента в списке, реакция на кнопку', () => {
-  const store = makeTestStore({ useMockStore: true });
+  const store = makeTestStore();
 
   // arrange
   testRender(<ListItem id={id} title={title} />, { store });
@@ -21,10 +20,7 @@ test('Отображение элемента в списке, реакция н
   fireEvent.click(deleteButton);
 
   // asset
-  expect(store.getActions()[0]).toEqual({
-    type: ACTION_TYPES.SET_REQUEST_STATE,
-    payload: REQUEST_STATE_TYPES.LOADING
-  });
+  expect(store.getActions()[0]).toEqual(setRequestState(REQUEST_STATE_TYPES.LOADING));
 });
 
 test('Отображение выбранного чекбокса', () => {
@@ -46,7 +42,7 @@ test('Отображение пустого чекбокса', () => {
 });
 
 test('При клике на чекбокс вызывается нужный метод', () => {
-  const store = makeTestStore({ useMockStore: true });
+  const store = makeTestStore();
 
   testRender(<ListItem id={id} title={title} isChecked={false} />, { store });
   const checkbox = screen.getByTestId('checkbox');
@@ -54,14 +50,11 @@ test('При клике на чекбокс вызывается нужный м
 
   expect(store.dispatch).not.toBeCalled();
   fireEvent.click(checkbox);
-  expect(store.getActions()[0]).toEqual({
-    type: ACTION_TYPES.SET_REQUEST_STATE,
-    payload: REQUEST_STATE_TYPES.LOADING
-  });
+  expect(store.getActions()[0]).toEqual(setRequestState(REQUEST_STATE_TYPES.LOADING));
 });
 
 test('Отображение поля редактирования и возможности сохранения содержимого', () => {
-  const store = makeTestStore({ useMockStore: true });
+  const store = makeTestStore();
   const value = 'value';
 
   testRender(<ListItem id={id} title={title} />, { store });
@@ -81,8 +74,5 @@ test('Отображение поля редактирования и возмо
   expect(screen.queryByTestId('saveButton')).toBeNull();
   expect(screen.queryByTestId('editButton')).not.toBeNull();
 
-  expect(store.getActions()[0]).toEqual({
-    type: ACTION_TYPES.SET_REQUEST_STATE,
-    payload: REQUEST_STATE_TYPES.LOADING
-  });
+  expect(store.getActions()[0]).toEqual(setRequestState(REQUEST_STATE_TYPES.LOADING));
 });

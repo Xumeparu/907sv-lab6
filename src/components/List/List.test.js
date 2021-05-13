@@ -1,8 +1,7 @@
 import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { DecoupledList } from './List';
-import { REQUEST_STATE_TYPES } from '../../store/reducers/todoSlice';
-import { ACTION_TYPES } from '../../store/actions';
+import { REQUEST_STATE_TYPES, checked, setRequestState } from '../../store/reducers/todoSlice';
 import { makeTestStore, testRender, list } from '../../setupTests';
 
 test('Корректное отображение пустого списка', () => {
@@ -13,7 +12,7 @@ test('Корректное отображение пустого списка', 
 });
 
 test('Корректное отображение списка элементов', () => {
-  const store = makeTestStore({ useMockStore: true });
+  const store = makeTestStore();
   testRender(<DecoupledList list={list} />, { store });
 
   for (let item of list) {
@@ -23,10 +22,7 @@ test('Корректное отображение списка элементо�
   for (let deleteButton of screen.getAllByTestId('deleteButton')) {
     fireEvent.click(deleteButton);
   }
-  expect(store.getActions()[0]).toEqual({
-    type: ACTION_TYPES.SET_REQUEST_STATE,
-    payload: REQUEST_STATE_TYPES.LOADING
-  });
+  expect(store.getActions()[0]).toEqual(setRequestState(REQUEST_STATE_TYPES.LOADING));
 });
 
 test('Отображение чекбоксов в нужном состоянии', () => {
@@ -46,6 +42,6 @@ test('Вызов checkHandler с нужными параметрами при к
   const checkboxes = screen.getAllByTestId('checkbox');
   for (let i = 0; i < checkboxes; i++) {
     fireEvent.click(checkboxes[i]);
-    expect(store.dispatch).toBeCalledWith({ type: ACTION_TYPES.CHECKED, payload: list[i].id });
+    expect(store.dispatch).toBeCalledWith(checked);
   }
 });

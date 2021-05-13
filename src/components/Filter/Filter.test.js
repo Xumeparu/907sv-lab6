@@ -1,8 +1,7 @@
 import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import Filter from './Filter';
-import { SELECT_ITEM_STATE } from '../../store/reducers/filterSlice';
-import { ACTION_TYPES } from '../../store/actions';
+import { SELECT_ITEM_STATE, setItemState } from '../../store/reducers/filterSlice';
 import { makeTestStore, testRender } from '../../setupTests';
 
 const store = makeTestStore({
@@ -34,8 +33,5 @@ test('Отображение компонентом элементов с пра
       value: SELECT_ITEM_STATE.DONE
     }
   });
-  expect(store.dispatch).toBeCalledWith({
-    type: ACTION_TYPES.SELECT_BY_FILTER,
-    payload: SELECT_ITEM_STATE.DONE
-  });
+  expect(store.dispatch).toBeCalledWith(setItemState(SELECT_ITEM_STATE.DONE));
 });

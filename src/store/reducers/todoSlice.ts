@@ -19,7 +19,7 @@ export type TodoSlice = {
   error: string;
 };
 
-export const todoInitialState: TodoSlice = {
+export const initialState: TodoSlice = {
   list: [],
   requestState: REQUEST_STATE_TYPES.IDLE,
   error: ''
@@ -27,7 +27,7 @@ export const todoInitialState: TodoSlice = {
 
 const todoSlice = createSlice({
   name: 'todo',
-  initialState: todoInitialState,
+  initialState,
   reducers: {
     add: (state, action: PayloadAction<IItem>) => {
       state.list.push(action.payload);

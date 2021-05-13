@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Store } from '../../store';
-import {SELECT_ITEM_STATE_TYPE, SELECT_ITEM_STATE, setItemState, setSubstring} from '../../store/reducers/filterSlice';
+import { SELECT_ITEM_STATE_TYPE, SELECT_ITEM_STATE, setItemState, setSubstring } from '../../store/reducers/filterSlice';
 
 export default function Filter() {
   const dispatch = useDispatch();
@@ -28,12 +28,7 @@ export default function Filter() {
           </option>
         ))}
       </select>
-      <input
-        className="searchString"
-        data-testid="searchString"
-        value={substring}
-        onChange={searchStringHandler}
-      />
+      <input className="searchString" data-testid="searchString" value={substring} onChange={searchStringHandler} />
     </div>
   );
 }

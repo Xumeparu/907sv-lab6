@@ -6,7 +6,6 @@ import TodoView from '../views/TodoView';
 import LoginView from '../views/LoginView';
 import Alert from '../components/Alert/Alert';
 import { initialAuthCheck } from '../store/reducers/todoSlice';
-import ReverseString from '../components/ReverseString/ReverseString';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -25,9 +24,6 @@ export default function App() {
         <Route path="/login" component={LoginView} />
         <Route path="/todo" component={TodoView} />
       </Switch>
-        <div>
-            <ReverseString />
-        </div>
     </div>
   );
 }

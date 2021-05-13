@@ -16,14 +16,14 @@ export type FilterSlice = {
   substring: string;
 };
 
-export const filterInitialState: FilterSlice = {
+export const initialState: FilterSlice = {
   itemState: SELECT_ITEM_STATE.ALL,
   substring: ''
 };
 
 const filterSlice = createSlice({
   name: 'filter',
-  initialState: filterInitialState,
+  initialState,
   reducers: {
     setItemState: (state, action: PayloadAction<SELECT_ITEM_STATE_TYPE>) => {
       state.itemState = action.payload;
