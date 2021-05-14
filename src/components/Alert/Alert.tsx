@@ -8,18 +8,14 @@ export default function Alert() {
   const error = useSelector((state: Store) => state.todo.error);
 
   return (
-    <>
-      {requestState === REQUEST_STATE_TYPES.LOADING && (
-        <>
-          <div>Загрузка...</div>
-        </>
-      )}
+    <div data-testid="alert">
+      {requestState === REQUEST_STATE_TYPES.LOADING && <div data-testid="loading">Загрузка...</div>}
 
       {requestState === REQUEST_STATE_TYPES.ERROR && (
-        <>
-          <div className="errorMessage">{error}</div>
-        </>
+        <div className="errorMessage" data-testid="error">
+          {error}
+        </div>
       )}
-    </>
+    </div>
   );
 }
