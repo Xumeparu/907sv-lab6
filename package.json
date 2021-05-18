@@ -68,5 +68,12 @@
     "*.(js|jsx|ts|tsx)": [
       "eslint --fix"
     ]
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "src/views/*",
+      "src/App",
+      "src/index"
+    ]
   }
 }
