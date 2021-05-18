@@ -9,7 +9,7 @@ function randomNumber() {
   return Math.random();
 }
 
-async function handleAlert(response: any) {
+async function handleError(response: any) {
   const data = await response.json();
   if (response.status !== 200) {
     throw new Error(data.error);
@@ -26,12 +26,12 @@ const api = {
         body: JSON.stringify({
           title
         })
-      }).then(handleAlert),
-    list: () => fetch(`${URL}/todos?${randomNumber()}`).then(handleAlert),
+      }).then(handleError),
+    list: () => fetch(`${URL}/todos?${randomNumber()}`).then(handleError),
     remove: ({ id }: { id: string }) =>
       fetch(`${URL}/todos/${id}`, {
         method: 'DELETE'
-      }).then(handleAlert),
+      }).then(handleError),
     checked: ({ id, isChecked }: { id: string; isChecked: boolean }) =>
       fetch(`${URL}/todos/${id}`, {
         method: 'PUT',
@@ -40,7 +40,7 @@ const api = {
           id,
           isChecked
         })
-      }).then(handleAlert),
+      }).then(handleError),
     edit: ({ id, title }: { id: string; title: string }) =>
       fetch(`${URL}/todos/${id}`, {
         method: 'PUT',
@@ -49,10 +49,10 @@ const api = {
           id,
           title
         })
-      }).then(handleAlert)
+      }).then(handleError)
   },
   auth: {
-    check: () => fetch(`${URL}/auth`).then(handleAlert),
+    check: () => fetch(`${URL}/auth`).then(handleError),
     login: (username: string, password: string) =>
       fetch(`${URL}/auth`, {
         method: 'POST',
@@ -61,11 +61,11 @@ const api = {
           username,
           password
         })
-      }).then(handleAlert),
+      }).then(handleError),
     logout: () =>
       fetch(`${URL}/auth`, {
         method: 'DELETE'
-      }).then(handleAlert)
+      }).then(handleError)
   }
 };
 

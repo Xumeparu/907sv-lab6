@@ -2,13 +2,13 @@ import { push } from 'connected-react-router';
 import api from '../api';
 import { AppDispatch } from './index';
 import {
-  REQUEST_STATE_TYPES,
   add,
-  remove,
   checked,
   edit,
-  setError,
-  setRequestState
+  remove,
+  REQUEST_STATE_TYPES,
+  setRequestState,
+  setError
 } from './reducers/todoSlice';
 
 export const addItem = (title: string) => async (dispatch: AppDispatch) => {
@@ -52,6 +52,18 @@ export const editItem = (id: string, title: string) => async (dispatch: AppDispa
     dispatch(setRequestState(REQUEST_STATE_TYPES.LOADING));
     const data = await api.todo.edit({ id, title });
     dispatch(edit(data));
+    dispatch(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
+  } catch (error) {
+    dispatch(setError(error.message));
+    dispatch(setRequestState(REQUEST_STATE_TYPES.ERROR));
+  }
+};
+
+export const check = () => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(setRequestState(REQUEST_STATE_TYPES.LOADING));
+    await api.auth.check();
+    dispatch(push('/todo'));
     dispatch(setRequestState(REQUEST_STATE_TYPES.SUCCESS));
   } catch (error) {
     dispatch(setError(error.message));

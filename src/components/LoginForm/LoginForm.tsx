@@ -9,13 +9,12 @@ export default function LoginForm() {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     dispatch(login(username, password));
   }
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} data-testId="loginForm">
         <div>
           <label>
             Username:&nbsp;

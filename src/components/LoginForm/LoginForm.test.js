@@ -1,15 +1,15 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
-import ItemsCounter from './ItemsCounter';
+import LoginForm from './LoginForm';
 import { makeTestStore, testRender } from '../../setupTests';
 
-describe('Тестирование компонента ItemsCounter', () => {
+describe('Тестирование компонента LoginForm', () => {
   test('Выполнение рендера компонента', () => {
     const store = makeTestStore();
 
-    testRender(<ItemsCounter />, { store });
+    testRender(<LoginForm />, { store });
 
-    const counter = screen.getByTestId('counter');
-    expect(counter).toBeInTheDocument();
+    const loginForm = screen.getByTestId('loginForm');
+    expect(loginForm).toBeInTheDocument();
   });
 });

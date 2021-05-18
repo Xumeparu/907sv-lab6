@@ -1,8 +1,9 @@
 import fetchMock from 'fetch-mock';
+import { push } from 'connected-react-router';
 import { initialState } from './index';
 import { REQUEST_STATE_TYPES, add, remove, setRequestState, setError } from './reducers/todoSlice';
 import { SELECT_ITEM_STATE } from './reducers/filterSlice';
-import { addItem, removeItem } from './actions';
+import { addItem, removeItem, check, login, logout } from './actions';
 import {
   selectByFilter,
   selectBySearchString,
@@ -55,6 +56,13 @@ describe('Тестирование селекторов', () => {
 
 describe('Тестирование асинхронных экшенов', () => {
   afterEach(() => fetchMock.reset());
+
+  const errorObject = {
+    error: 'Error message'
+  };
+
+  const username = 'admin';
+  const password = '123';
 
   test('addItem', async () => {
     fetchMock.mock(
@@ -141,6 +149,132 @@ describe('Тестирование асинхронных экшенов', () =>
 
     const store = makeTestStore({ initialState: list, useMockStore: true });
     await store.dispatch(removeItem(list[0].id));
+    expect(store.getActions()).toEqual([
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      setError(errorObject.error),
+      setRequestState(REQUEST_STATE_TYPES.ERROR)
+    ]);
+  });
+
+  test('check', async () => {
+    fetchMock.mock(
+      'express:/auth',
+      {
+        status: 200,
+        body: {}
+      },
+      {
+        method: 'GET'
+      }
+    );
+
+    const store = makeTestStore();
+    await store.dispatch(check());
+    expect(store.getActions()).toEqual([
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      push('/todo'),
+      setRequestState(REQUEST_STATE_TYPES.SUCCESS)
+    ]);
+  });
+
+  test('check с ошибкой', async () => {
+    fetchMock.mock(
+      'express:/auth',
+      {
+        status: 500,
+        body: errorObject
+      },
+      {
+        method: 'GET'
+      }
+    );
+
+    const store = makeTestStore();
+    await store.dispatch(check());
+    expect(store.getActions()).toEqual([
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      setError(errorObject.error),
+      setRequestState(REQUEST_STATE_TYPES.ERROR)
+    ]);
+  });
+
+  test('login', async () => {
+    fetchMock.mock(
+      'express:/auth',
+      {
+        status: 200,
+        body: { username, password }
+      },
+      {
+        method: 'POST'
+      }
+    );
+
+    const store = makeTestStore();
+    await store.dispatch(login(username, password));
+    expect(store.getActions()).toEqual([
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      push('/todo'),
+      setRequestState(REQUEST_STATE_TYPES.SUCCESS)
+    ]);
+  });
+
+  test('login с ошибкой', async () => {
+    fetchMock.mock(
+      'express:/auth',
+      {
+        status: 500,
+        body: errorObject
+      },
+      {
+        method: 'POST'
+      }
+    );
+
+    const store = makeTestStore();
+    await store.dispatch(login(username, password));
+    expect(store.getActions()).toEqual([
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      setError(errorObject.error),
+      setRequestState(REQUEST_STATE_TYPES.ERROR)
+    ]);
+  });
+
+  test('logout', async () => {
+    fetchMock.mock(
+      'express:/auth',
+      {
+        status: 200,
+        body: {}
+      },
+      {
+        method: 'DELETE'
+      }
+    );
+
+    const store = makeTestStore();
+    await store.dispatch(logout());
+    expect(store.getActions()).toEqual([
+      setRequestState(REQUEST_STATE_TYPES.LOADING),
+      push('/login'),
+      setRequestState(REQUEST_STATE_TYPES.SUCCESS)
+    ]);
+  });
+
+  test('logout с ошибкой', async () => {
+    fetchMock.mock(
+      'express:/auth',
+      {
+        status: 500,
+        body: errorObject
+      },
+      {
+        method: 'DELETE'
+      }
+    );
+
+    const store = makeTestStore();
+    await store.dispatch(logout());
     expect(store.getActions()).toEqual([
       setRequestState(REQUEST_STATE_TYPES.LOADING),
       setError(errorObject.error),
