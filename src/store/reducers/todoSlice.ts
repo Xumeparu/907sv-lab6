@@ -17,13 +17,13 @@ export type TodoSlice = {
   list: IItem[];
   requestState: REQUEST_STATE_TYPES;
   error: string;
-};
+}
 
 export const initialState: TodoSlice = {
   list: [],
   requestState: REQUEST_STATE_TYPES.IDLE,
   error: ''
-};
+}
 
 const todoSlice = createSlice({
   name: 'todo',
