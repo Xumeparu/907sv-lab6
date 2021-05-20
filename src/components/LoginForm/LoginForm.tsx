@@ -14,7 +14,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit} data-testId="loginForm">
+      <form onSubmit={handleSubmit} data-testid="loginForm">
         <div>
           <label>
             Username:&nbsp;

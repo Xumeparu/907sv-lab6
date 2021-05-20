@@ -11,7 +11,7 @@ export default function Logout() {
 
   return (
     <>
-      <button type="submit" className="logoutBtn" data-testId="logout" onClick={logoutHandler}>
+      <button type="submit" className="logoutBtn" data-testid="logout" onClick={logoutHandler}>
         Log Out
       </button>
     </>

@@ -4,9 +4,7 @@ import Filter from './Filter';
 import { SELECT_ITEM_STATE, setItemState } from '../../store/reducers/filterSlice';
 import { makeTestStore, testRender } from '../../setupTests';
 
-const store = makeTestStore({
-  initialState: { todo: [], filter: SELECT_ITEM_STATE.ALL, substring: '' }
-});
+const store = makeTestStore();
 
 test('Выполнение рендера компонента Filter', () => {
   testRender(<Filter />, { store });
